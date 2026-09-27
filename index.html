@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>buat syazwani ♡</title>
+    <!-- Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons for music player and decorative elements -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts for casual handwritten & clean readable style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom Theme Colors */
+        :root {
+            --baby-blue: #b9dcff;
+            --soft-pink: #ffc5d9;
+            --butter-yellow: #ffe9a8;
+            --warm-white: #fdfbf7;
+            --soft-gray: #f4f0ea;
+            --text-brown: #4a3e3d;
+            --text-muted: #7c6c6a;
+        }
+
+        body {
+            background-color: var(--warm-white);
+            color: var(--text-brown);
+            font-family: 'Nunito', sans-serif;
+            overflow-x: hidden;
+            /* Subtle paper texture effect */
+            background-image: radial-gradient(#e2dad1 0.75px, transparent 0.75px);
+            background-size: 16px 16px;
+        }
+
+        /* Handwritten font utility */
+        .font-handwritten {
+            font-family: 'Caveat', cursive;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--warm-white);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--soft-pink);
+            border-radius: 999px;
+        }
+
+        /* Scrapbook Polaroid Framing */
+        .polaroid {
+            background: #ffffff;
+            padding: 12px 12px 24px 12px;
+            box-shadow: 0 10px 25px -5px rgba(74, 62, 61, 0.1), 0 8px 10px -6px rgba(74, 62, 61, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .polaroid:hover {
+            transform: translateY(-5px) rotate(0deg) !important;
+            box-shadow: 0 20px 30px -10px rgba(74, 62, 61, 0.15);
+        }
+
+        /* Cute Washi Tape Decorator */
+        .washi-tape {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 24px;
+            background: rgba(255, 233, 168, 0.75);
+            backdrop-filter: blur(2px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        .washi-tape-pink {
+            background: rgba(255, 197, 217, 0.75);
+        }
+
+        .washi-tape-blue {
+            background: rgba(185, 220, 255, 0.75);
+        }
+
+        /* Scroll Animations */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, transform;
+        }
+
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Floating Hearts Layer */
+        #floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 40;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            color: var(--soft-pink);
+            opacity: 0.6;
+            animation: floatUp 8s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0.5) rotate(0deg);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Reading Progress Bar */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--baby-blue), var(--soft-pink), var(--butter-yellow));
+            z-index: 100;
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Memory Cards Interactive Flip/Reveal */
+        .memory-card {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .memory-card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .memory-card.flipped .memory-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card-front,
+        .memory-card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .memory-card-back {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen relative selection:bg-pink-200">
+
+    <!-- Reading Progress Bar -->
+    <div id="progress-bar"></div>
+
+    <!-- Floating Background Hearts Container -->
+    <div id="floating-hearts"></div>
+
+    <!-- Music Player Control (Fixed Top Right) -->
+    <div id="music-player-widget" class="fixed top-4 right-4 z-50 flex items-center gap-2 bg-white/90 backdrop-blur-md px-3 py-2 rounded-full shadow-md border border-pink-100">
+        <button id="music-toggle-btn" class="w-8 h-8 rounded-full flex items-center justify-center text-xs text-stone-700 bg-pink-100 hover:bg-pink-200 transition-colors">
+            <i class="fa-solid fa-music" id="music-icon"></i>
+        </button>
+        <span class="text-xs text-stone-600 font-medium hidden sm:inline pr-1" id="music-label">lagu kita</span>
+        <audio id="bg-music" loop>
+            <source id="audio-source" src="" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <div id="app" class="relative">
+
+        <!-- 01 — OPENING COVER -->
+        <section id="opening-screen" class="min-h-screen flex flex-col items-center justify-center p-6 text-center relative z-30 transition-opacity duration-700">
+            <div class="max-w-md w-full bg-white/80 backdrop-blur-sm p-8 rounded-3xl shadow-xl border border-pink-100 relative">
+                <div class="washi-tape washi-tape-pink"></div>
+                <p class="text-xs uppercase tracking-widest text-stone-400 mb-2 font-semibold">a little something, just for you.</p>
+                <h1 class="text-4xl sm:text-5xl font-handwritten font-bold text-stone-700 mb-4" id="opening-title">buat syazwani ♡</h1>
+                <p class="text-stone-600 text-sm mb-8 leading-relaxed lowercase" id="opening-subtitle">
+                    website kecil ini aku buat khusus untuk kamuu simpel aja, tapi semua datang dari hati aku.
+                </p>
+                <button id="start-btn" class="w-full py-3.5 px-6 rounded-2xl bg-[#ffc5d9] hover:bg-[#f3b1c7] text-stone-800 font-semibold shadow-md transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
+                    <span>buka yaa</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MAIN CONTENT SECTIONS (Hidden until opened) -->
+        <main id="main-content" class="hidden">
+
+            <!-- 02 — LIHAT KAMU -->
+            <section class="py-20 px-4 sm:px-6 max-w-4xl mx-auto fade-in-section">
+                <div class="text-center mb-12">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-[#b9dcff] text-stone-700 inline-block mb-2">01 / moment</span>
+                    <h2 class="text-3xl sm:text-4xl font-handwritten font-bold text-stone-700">lihat kamu.</h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-10" id="photo-grid-syaz">
+                    <!-- Dynamic Polaroid Photos injected here via CONFIG -->
+                </div>
+            </section>
+
+            <!-- 03 — MAKASIH, YA -->
+            <section class="py-20 px-4 sm:px-6 max-w-3xl mx-auto fade-in-section">
+                <div class="bg-[#ffe9a8]/40 p-8 sm:p-12 rounded-3xl shadow-sm border border-amber-100 relative">
+                    <div class="washi-tape washi-tape-blue"></div>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white text-stone-700 inline-block mb-3">02 / gratitude</span>
+                    <h2 class="text-3xl font-handwritten font-bold text-stone-700 mb-6">makasih, ya.</h2>
+
+                    <div class="space-y-4 text-stone-700 text-sm sm:text-base leading-relaxed lowercase" id="appreciation-text">
+                        <!-- Injected via CONFIG -->
+                    </div>
+
+                    <div class="mt-8 pt-4 border-t border-amber-200/60 flex items-center justify-between text-xs text-stone-500 italic">
+                        <span>always appreciated</span>
+                        <span class="font-handwritten text-lg text-stone-600 font-bold">"thank you for staying."</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 04 — AKU MINTA MAAF -->
+            <section class="py-20 px-4 sm:px-6 max-w-3xl mx-auto fade-in-section">
+                <div class="bg-[#ffc5d9]/30 p-8 sm:p-12 rounded-3xl shadow-sm border border-pink-100 relative">
+                    <div class="washi-tape"></div>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white text-stone-700 inline-block mb-3">03 / apology</span>
+                    <h2 class="text-3xl font-handwritten font-bold text-stone-700 mb-6">aku minta maaf.</h2>
+
+                    <div class="space-y-4 text-stone-700 text-sm sm:text-base leading-relaxed lowercase" id="apology-text">
+                        <!-- Injected via CONFIG -->
+                    </div>
+
+                    <div class="mt-8 pt-4 border-t border-pink-200/60 flex items-center justify-between text-xs text-stone-500 italic">
+                        <span>sincerely, from me</span>
+                        <span class="font-handwritten text-lg text-stone-600 font-bold">"i'm sorry."</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 05 — AKU MASIH BELAJAR -->
+            <section class="py-16 px-4 sm:px-6 max-w-3xl mx-auto text-center fade-in-section">
+                <div class="bg-[#b9dcff]/30 p-8 sm:p-10 rounded-3xl border border-blue-100 inline-block w-full">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white text-stone-700 inline-block mb-3">04 / process</span>
+                    <h2 class="text-3xl font-handwritten font-bold text-stone-700 mb-4">aku masih belajar.</h2>
+                    <p class="text-stone-700 text-sm sm:text-base max-w-xl mx-auto leading-relaxed lowercase mb-6" id="learning-text">
+                        <!-- Injected via CONFIG -->
+                    </p>
+                    <span class="inline-block px-4 py-1.5 rounded-full bg-white text-stone-600 text-xs font-medium shadow-sm">
+                        ♡ "i'll keep trying."
+                    </span>
+                </div>
+            </section>
+
+            <!-- 06 — HAL-HAL KECIL YANG AKU SUKA DARI KAMU -->
+            <section class="py-20 px-4 sm:px-6 max-w-4xl mx-auto fade-in-section">
+                <div class="text-center mb-10">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-[#ffe9a8] text-stone-700 inline-block mb-2">05 / little details</span>
+                    <h2 class="text-3xl sm:text-4xl font-handwritten font-bold text-stone-700">hal-hal kecil yang aku suka dari kamu.</h2>
+                    <p class="text-stone-500 text-xs mt-2">(klik kartunya buat baca ya ♡)</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="interactive-cards-grid">
+                    <!-- Interactive memory cards injected via CONFIG -->
+                </div>
+            </section>
+
+            <!-- 07 — KALAU SUATU HARI NANTI SEMUANYA TERASA BERAT -->
+            <section class="py-20 px-4 sm:px-6 max-w-3xl mx-auto fade-in-section">
+                <div class="bg-white p-8 sm:p-12 rounded-3xl shadow-sm border border-stone-200/60 relative">
+                    <div class="washi-tape washi-tape-pink"></div>
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-[#ffc5d9] text-stone-700 inline-block mb-3">06 / promise</span>
+                    <h2 class="text-2xl sm:text-3xl font-handwritten font-bold text-stone-700 mb-6">kalau suatu hari nanti semuanya terasa berat…</h2>
+
+                    <div class="space-y-4 text-stone-700 text-sm sm:text-base leading-relaxed lowercase" id="heavy-days-text">
+                        <!-- Injected via CONFIG -->
+                    </div>
+
+                    <div class="mt-8 text-right">
+                        <span class="font-handwritten text-xl text-stone-600 font-bold">"i'll stay." ♡</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 08 — DAN AKHIRNYA, ADA KITA -->
+            <section class="py-20 px-4 sm:px-6 max-w-3xl mx-auto text-center fade-in-section">
+                <div class="mb-8">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-[#b9dcff] text-stone-700 inline-block mb-2">07 / us</span>
+                    <h2 class="text-3xl sm:text-4xl font-handwritten font-bold text-stone-700">dan akhirnya, ada kita.</h2>
+                </div>
+
+                <!-- Reveal Box Container -->
+                <div class="bg-white/90 p-8 sm:p-10 rounded-3xl shadow-md border border-stone-200 relative max-w-xl mx-auto">
+                    <div class="washi-tape washi-tape-blue"></div>
+                    <p class="text-stone-600 text-sm sm:text-base leading-relaxed lowercase mb-6 italic" id="us-preamble">
+                        "dari tadi isinya foto kamu semua… tapi ada satu foto yang sengaja aku simpan sampai akhir."
+                    </p>
+
+                    <!-- Hidden/Clickable photo reveal trigger -->
+                    <div id="us-photo-wrapper" class="relative group cursor-pointer my-6">
+                        <div id="photo-reveal-overlay" class="absolute inset-0 bg-[#ffe9a8]/90 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center p-6 z-20 transition-all duration-500">
+                            <i class="fa-solid fa-heart text-pink-400 text-3xl mb-2 animate-bounce"></i>
+                            <span class="text-xs font-bold text-stone-700 uppercase tracking-wider">klik untuk lihat foto kita ♡</span>
+                        </div>
+
+                        <!-- PHOTO_US -->
+                        <div class="polaroid transform rotate-1 transition-transform">
+                            <img id="photo-us-img" src="" alt="Photo of Us" class="w-full h-64 sm:h-80 object-cover rounded-lg bg-stone-100" onerror="this.onerror=null; this.src='https://placehold.co/600x400/ffe9a8/4a3e3d?text=PHOTO_US';">
+                            <p class="font-handwritten text-stone-700 text-lg mt-3 text-center" id="photo-us-caption">kita ♡</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 text-stone-700 text-sm sm:text-base leading-relaxed lowercase mt-6 text-left" id="us-message">
+                        <!-- Injected via CONFIG -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 09 — FINAL MESSAGE -->
+            <section class="py-24 px-4 sm:px-6 max-w-2xl mx-auto text-center fade-in-section">
+                <div class="bg-gradient-to-b from-[#ffc5d9]/30 to-[#ffe9a8]/30 p-8 sm:p-12 rounded-3xl border border-pink-100 shadow-sm relative">
+                    <h2 class="text-4xl sm:text-5xl font-handwritten font-bold text-stone-700 mb-6">jadi, syaz…</h2>
+
+                    <div class="space-y-3 text-stone-700 text-base sm:text-lg lowercase leading-relaxed font-medium mb-8" id="final-messages-list">
+                        <!-- Injected via CONFIG -->
+                    </div>
+
+                    <div class="pt-6 border-t border-stone-200/80">
+                        <p class="font-handwritten text-3xl text-pink-500 font-bold mb-2">"i'll always love you."</p>
+                        <p class="text-2xl text-pink-400">♡</p>
+                    </div>
+                </div>
+
+                <!-- Cute Footer -->
+                <footer class="mt-16 text-xs text-stone-400 font-medium">
+                    <p id="footer-text">made with love, just for syazwani.</p>
+                </footer>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        /* ====================================================================
+        ✦ EDIT YOUR WEBSITE HERE ✦
+        ==================================================================== 
+        You can easily edit all contents, photo filenames, messages, captions, 
+        and colors below without changing the rest of the code!
+        ==================================================================== */
+
+        const CONFIG = {
+            // Girlfriend's name
+            nickname: "syaz",
+            fullName: "syazwani",
+
+            // Music Settings
+            // Place your mp3 file in music/song.mp3 (or change path here)
+            musicPath: "music/manusia-bahagia.mp3",
+
+            // Photo paths - place your images in images/ folder (or use URLs)
+            photos: {
+                PHOTO_01_SYAZ: "https://i.imgur.com/Kovyqqz.jpeg",
+                PHOTO_02_SYAZ: "https://i.imgur.com/bK1sHxl.jpeg",
+                PHOTO_03_SYAZ: "https://i.imgur.com/C5w8G5L.jpeg",
+                PHOTO_04_SYAZ: "https://i.imgur.com/ig70jRU.jpeg",
+                PHOTO_05_SYAZ: "https://i.imgur.com/NDFsSVI.jpeg",
+                PHOTO_US: "https://i.imgur.com/qGxQyJN.jpeg"
+            },
+
+            // 02 — Captions for Syaz's photos
+            photoCaptions: [
+                "foto ini selalu berhasil bikin aku tersenyum tanpa alasan.",
+                "kamu yang apa adanya, selalu jadi pemandangan favorit aku.",
+                "entah kenapa, senyum kamu di sini bikin aku tenang banget.",
+                "salah satu momen di mana aku mikir kalo aku tuh bersyukur banget punya kamu.",
+                "setiap kali ngeliat foto ini, aku selalu teringat betapa manisnya kamu."
+            ],
+
+            // 03 — Appreciation Texts ("makasih, ya.")
+            appreciationParagraphs: [
+                "makasih banyak ya udah selalu sabar sama aku, apalagi sama sifat sifat aku. aku mengerti aku itu ngga selalu mudah, tapi kamu selalu milih buat tetap bertahan.",
+                "kesetiaan dan kebaikan hati kamu tuh hal paling berharga buat aku. cara kamu dengerin cerita aku, cara kamu berusaha mengerti aku bahkan saat aku sulit dijelaskan...",
+                "terima kasih udah milih buat tetap ada di sini. kehadiran kamu bikin hari hari biasa kerasa jauh lebih hangat dan bermakna."
+            ],
+
+            // 04 — Apology Texts ("aku minta maaf.")
+            apologyParagraphs: [
+                "aku mau minta maaf dari lubuk hati aku yang paling dalam. maaf untuk momen momen di mana aku salah omong, bertindak kekanak kanakan, atau bikin kamu sedih tanpa aku sadari.",
+                "aku tau aku ngga selalu benar. aku masih banyak kekurangannya dan masih belajar gimana cara jadi pasangan yang baik buat kamu.",
+                "kalau aku ada salah, aku beneran mau belajar dari kesalahan itu. makasih udah selalu kasih aku ruang buat tumbuh yaa syayangg"
+            ],
+
+            // 05 — Learning Text ("aku masih belajar.")
+            learningText: "sebuah hubungan itu kan tentang saling melengkapi dan mau terus berproses bareng. aku ga janji bisa langsung sempurna, tapi aku janji akan terus berusaha jadi yang terbaik buat kamu.",
+
+            // 06 — Interactive Memory Cards ("hal-hal kecil yang aku suka dari kamu")
+            memoryCards: [{
+                    title: "cara kamu ngomong",
+                    message: "cara kamu cerita tentang hal hal kecil tuh selalu gemesinn.. aku suka dengerin suara kamu walau cuma ngomongin hal random."
+                },
+                {
+                    title: "kesabaran kamu",
+                    message: "kamu punya hati yang luasss BANGET! cara kamu tetap tenang dan baik ke aku waktu aku lagi bingung atau salah itu luar biasa."
+                },
+                {
+                    title: "sisi random kamu",
+                    message: "tingkah lucu dan jokes tiba tiba kamu selalu sukses bikin suasana cair dan bikin mood aku langsung naik."
+                },
+                {
+                    title: "senyum kamu",
+                    message: "senyuman kamu tuh beneran superpower syayang. ngeliat kamu senyum rasanya semua masalah jadi berasa lebih ringan atau hilang."
+                },
+                {
+                    title: "cara kamu peduli",
+                    message: "perhatian perhatian kecil yang kamu kasih, bahkan hal simpel yang mungkin kamu pikir biasa aja itu selalu bikin aku merasa disayang."
+                },
+                {
+                    title: "hal-hal kecil tentang kamu",
+                    message: "mulai dari ekspresi kamu waktu bingung sampai kebiasaan kebiasaan kecil kamu... semuanya bikin kamu makin spesial di mata aku."
+                }
+            ],
+
+            // 07 — Tough Days Text ("kalau suatu hari nanti semuanya terasa berat...")
+            heavyDaysParagraphs: [
+                "aku tau nanti mungkin ada hari di mana kita sama sama cape, ada salah paham, atau pikiran kita lagi ngga sejalan.",
+                "tapi aku harap kalau hari itu datang, kita ngga langsung lupa sama semua hal baik dan kenangan manis yang udah kita bangun bareng bareng.",
+                "aku mau belajar menghadapi masalahnya bareng kamu, bukan menjadikan masalah itu alasan untuk berhenti sayang, okeey cintakuu?"
+            ],
+
+            // 08 — "PHOTO_US" Text
+            usMessageParagraphs: [
+                "karena foto ini bukan cuma tentang kamu... ini tentang kita.",
+                "aku bersyukur banget jalan kita bisa ketemu. terima kasih yaaw udaa mau menjalani semua cerita dan proses ini bareng aku.",
+                "semoga kita bisa terus melangkah bareng, melewati banyak hal manis maupun tantangan di depan!!"
+            ],
+
+            // 09 — Final Closing Messages
+            finalMessages: [
+                "makasih ya.",
+                "makasih udah sabar sama akuuu",
+                "makasih udah tetap adaaa",
+                "makasih udah mau tumbuh bareng akuuu",
+                "aku mungkin ngga selalu sempurnaa,",
+                "tapi aku akan terus belajar!",
+                "dan kalau nanti hidup terasa berat...",
+                "aku harap kita tetap bisa saling genggam dan cari jalan keluarnya bareng bareng OKEYY SYAYANGG??"
+            ],
+
+            // Footer credits text
+            footerText: "made with love, just for syazwani <3"
+        };
+
+        /* ====================================================================
+        ✦ CORE APPLICATION LOGIC ✦
+        (You don't need to touch anything below unless you want custom code)
+        ==================================================================== */
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initApp();
+            setupScrollEffects();
+            setupFloatingHearts();
+            setupAudioPlayer();
+        });
+
+        function initApp() {
+            // Update Title and Cover Texts
+            document.getElementById("opening-title").innerText = `buat ${CONFIG.fullName} ♡`;
+            document.getElementById("footer-text").innerText = CONFIG.footerText;
+
+            // Populate Section 02 - Syaz Polaroid Grid
+            const photoGrid = document.getElementById("photo-grid-syaz");
+            const syazPhotoKeys = ["PHOTO_01_SYAZ", "PHOTO_02_SYAZ", "PHOTO_03_SYAZ", "PHOTO_04_SYAZ", "PHOTO_05_SYAZ"];
+
+            // Define light rotations for polaroid scrapbooking aesthetic
+            const tilts = ["rotate-1", "-rotate-2", "rotate-2", "-rotate-1", "rotate-3"];
+            const tapeColors = ["washi-tape-pink", "washi-tape-blue", "", "washi-tape-pink", "washi-tape-blue"];
+
+            syazPhotoKeys.forEach((key, idx) => {
+                const photoUrl = CONFIG.photos[key] || "";
+                const caption = CONFIG.photoCaptions[idx] || "momen manis bareng kamu.";
+                const tilt = tilts[idx % tilts.length];
+                const tapeColor = tapeColors[idx % tapeColors.length];
+
+                const cardHtml = `
+                    <div class="polaroid ${tilt} transition-transform duration-300 hover:scale-105">
+                        <div class="washi-tape ${tapeColor}"></div>
+                        <div class="overflow-hidden rounded-lg bg-stone-100 h-64 sm:h-72">
+                            <img src="${photoUrl}" alt="${key}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x600/ffc5d9/4a3e3d?text=${key}';">
+                        </div>
+                        <p class="font-handwritten text-stone-700 text-lg sm:text-xl mt-3 text-center leading-snug">${caption}</p>
+                    </div>
+                `;
+                photoGrid.innerHTML += cardHtml;
+            });
+
+            // Populate Section 03 - Appreciation Paragraphs
+            const appreciationContainer = document.getElementById("appreciation-text");
+            CONFIG.appreciationParagraphs.forEach(text => {
+                appreciationContainer.innerHTML += `<p>${text}</p>`;
+            });
+
+            // Populate Section 04 - Apology Paragraphs
+            const apologyContainer = document.getElementById("apology-text");
+            CONFIG.apologyParagraphs.forEach(text => {
+                apologyContainer.innerHTML += `<p>${text}</p>`;
+            });
+
+            // Populate Section 05 - Learning Text
+            document.getElementById("learning-text").innerText = CONFIG.learningText;
+
+            // Populate Section 06 - Interactive Memory Cards
+            const memoryGrid = document.getElementById("interactive-cards-grid");
+            const cardBgColors = ["bg-[#ffc5d9]/40", "bg-[#b9dcff]/40", "bg-[#ffe9a8]/50"];
+
+            CONFIG.memoryCards.forEach((card, idx) => {
+                const bg = cardBgColors[idx % cardBgColors.length];
+                const cardElement = document.createElement("div");
+                cardElement.className = "memory-card h-40 w-full";
+                cardElement.innerHTML = `
+                    <div class="memory-card-inner relative w-full h-full rounded-2xl shadow-sm cursor-pointer">
+                        <div class="memory-card-front absolute inset-0 ${bg} rounded-2xl p-5 border border-white flex flex-col justify-between items-center text-center">
+                            <span class="text-pink-400 text-lg">♡</span>
+                            <h3 class="font-handwritten text-2xl font-bold text-stone-700">${card.title}</h3>
+                            <span class="text-[11px] text-stone-500 bg-white/70 px-2 py-0.5 rounded-full">klik untuk buka ✦</span>
+                        </div>
+                        <div class="memory-card-back absolute inset-0 bg-white rounded-2xl p-5 border border-pink-100 flex items-center justify-center text-center shadow-md">
+                            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed font-medium lowercase">${card.message}</p>
+                        </div>
+                    </div>
+                `;
+                cardElement.addEventListener("click", () => {
+                    cardElement.classList.toggle("flipped");
+                });
+                memoryGrid.appendChild(cardElement);
+            });
+
+            // Populate Section 07 - Heavy Days Paragraphs
+            const heavyDaysContainer = document.getElementById("heavy-days-text");
+            CONFIG.heavyDaysParagraphs.forEach(text => {
+                heavyDaysContainer.innerHTML += `<p>${text}</p>`;
+            });
+
+            // Populate Section 08 - Us Photo & Messages
+            document.getElementById("photo-us-img").src = CONFIG.photos.PHOTO_US || "";
+            document.getElementById("photo-us-caption").innerText = `${CONFIG.nickname} & aku ♡`;
+
+            const usMessageContainer = document.getElementById("us-message");
+            CONFIG.usMessageParagraphs.forEach(text => {
+                usMessageContainer.innerHTML += `<p>${text}</p>`;
+            });
+
+            // Photo US reveal logic
+            const usWrapper = document.getElementById("us-photo-wrapper");
+            const usOverlay = document.getElementById("photo-reveal-overlay");
+            usWrapper.addEventListener("click", () => {
+                usOverlay.style.opacity = "0";
+                usOverlay.style.pointerEvents = "none";
+            });
+
+            // Populate Section 09 - Final Messages
+            const finalContainer = document.getElementById("final-messages-list");
+            CONFIG.finalMessages.forEach(msg => {
+                finalContainer.innerHTML += `<p>${msg}</p>`;
+            });
+
+            // Opening Screen Transition
+            const startBtn = document.getElementById("start-btn");
+            const openingScreen = document.getElementById("opening-screen");
+            const mainContent = document.getElementById("main-content");
+
+            startBtn.addEventListener("click", () => {
+                openingScreen.classList.add("opacity-0");
+                setTimeout(() => {
+                    openingScreen.classList.add("hidden");
+                    mainContent.classList.remove("hidden");
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                    // Trigger initial scroll observer
+                    handleScrollAnimations();
+                }, 700);
+            });
+        }
+
+        function setupScrollEffects() {
+            window.addEventListener("scroll", () => {
+                // Reading progress calculation
+                const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
+                document.getElementById("progress-bar").style.width = `${progress}%`;
+
+                handleScrollAnimations();
+            });
+        }
+
+        function handleScrollAnimations() {
+            const sections = document.querySelectorAll(".fade-in-section");
+            const triggerBottom = window.innerHeight * 0.85;
+
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                if (sectionTop < triggerBottom) {
+                    section.classList.add("is-visible");
+                }
+            });
+        }
+
+        function setupFloatingHearts() {
+            const container = document.getElementById("floating-hearts");
+            const heartIcons = ["♥", "♡", "💕", "🌸"];
+
+            setInterval(() => {
+                if (document.hidden) return; // Save memory if tab is inactive
+
+                const heart = document.createElement("div");
+                heart.className = "heart";
+                heart.innerText = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.fontSize = `${Math.random() * 14 + 10}px`;
+                heart.style.animationDuration = `${Math.random() * 4 + 6}s`;
+
+                container.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 10000);
+            }, 1200);
+        }
+
+        function setupAudioPlayer() {
+            const audioElement = document.getElementById("bg-music");
+            const audioSource = document.getElementById("audio-source");
+            const musicBtn = document.getElementById("music-toggle-btn");
+            const musicIcon = document.getElementById("music-icon");
+            const musicLabel = document.getElementById("music-label");
+
+            audioSource.src = CONFIG.musicPath;
+            audioElement.load();
+
+            let isPlaying = false;
+
+            musicBtn.addEventListener("click", () => {
+                if (!isPlaying) {
+                    audioElement.play().then(() => {
+                        isPlaying = true;
+                        musicIcon.className = "fa-solid fa-pause text-pink-500";
+                        musicLabel.innerText = "putar lagu";
+                    }).catch(err => {
+                        console.log("Audio play blocked or file not found:", err);
+                        alert("file musik belum ditemukan. pastikan file Manusia Bahagia.mp3 ada di folder music.");
+                    });
+                } else {
+                    audioElement.pause();
+                    isPlaying = false;
+                    musicIcon.className = "fa-solid fa-music";
+                    musicLabel.innerText = "lagu kita";
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
